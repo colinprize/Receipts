@@ -1,35 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>Document</title>
-  </head>
-  <body>
-    <main>
-      <h1>My Receipts</h1>
-      <table>
-        <thead>
+{% extends 'base.html' %}
+
+{% block content %}
+  <header>
+    <nav>
+      <ul>
+        {% if user.is_authenticated %}
+          <li>Hello, {{ user.username }}</li>
+          <li>
+            <a href="{% url 'logout' %}">Logout</a>
+          </li>
+        {% else %}
+          <li>
+            <a href="{% url 'signup' %}">Sign up</a>
+          </li>
+          <li>
+            <a href="{% url 'login' %}">Login</a>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <h1>My Receipts</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Vendor</th>
+          <th>Total</th>
+          <th>Tax</th>
+          <th>Date</th>
+          <th>Category</th>
+          <th>Account</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for receipt in receipts %}
           <tr>
-            <th>Vendor</th>
-            <th>Total</th>
-            <th>Tax</th>
-            <th>Date</th>
-            <th>Category</th>
-            <th>Account</th>
+            <td>{{ receipt.vendor }}</td>
+            <td>{{ receipt.total }}</td>
+            <td>{{ receipt.tax }}</td>
+            <td>{{ receipt.date|date:"m/d/YY" }}</td>
+            <td>{{ receipt.category.name }}</td>
+            <td>{{ receipt.account.name }}</td>
           </tr>
-        </thead>
-        <tbody>
-          {% for receipt in receipts %}
-            <tr>
-              <td>{{ receipt.vendor }}</td>
-              <td>{{ receipt.total }}</td>
-              <td>{{ receipt.tax }}</td>
-              <td>{{ receipt.date|date:"m/d/YY" }}</td>
-              <td>{{ receipt.category.name }}</td>
-              <td>{{ receipt.account.name }}</td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </main>
-  </body>
-</html>
+        {% endfor %}
+      </tbody>
+    </table>
+  </main>
+{% endblock content %}
